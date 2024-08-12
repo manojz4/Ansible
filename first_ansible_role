@@ -38,6 +38,15 @@ Handlers are used to handle changes that occur during the playbook execution. Fo
     state: restarted
   become: yes
 *************************
+Define Variables
+If you have specific variables for the role, you can define them in my_first_role/vars/main.yml. For example:
+
+---
+server_name: example.com
+
+************************
+
+
  Create a Playbook to Use Your Role
 Create a playbook in your project directory that uses your new role. For example, create site.yml in the root of your project directory:
 
