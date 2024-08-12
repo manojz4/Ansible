@@ -1,0 +1,64 @@
+ansible-galaxy role init my_first_role
+
+*************************
+2. Define Your Role
+a. Add Tasks
+Edit my_first_role/tasks/main.yml to define the tasks for your role. For example, let’s create a role that installs nginx and ensures it's running:
+
+---
+- name: Install nginx
+  apt:
+    name: nginx
+    state: present
+  become: yes
+
+- name: Ensure nginx is running and enabled
+  systemd:
+    name: nginx
+    state: started
+    enabled: yes
+  become: yes
+*************************
+b. Set Default Variables
+You can set default variables in my_first_role/defaults/main.yml. For instance:
+
+
+---
+nginx_package: nginx
+nginx_service: nginx
+
+*************************
+c. Define Handlers
+Handlers are used to handle changes that occur during the playbook execution. For example, you might want to restart nginx if the configuration changes. Edit my_first_role/handlers/main.yml:
+
+---
+- name: Restart nginx
+  systemd:
+    name: nginx
+    state: restarted
+  become: yes
+*************************
+ Create a Playbook to Use Your Role
+Create a playbook in your project directory that uses your new role. For example, create site.yml in the root of your project directory:
+
+---
+- name: Deploy nginx web server
+  hosts: webservers
+  become: yes
+  roles:
+    - my_first_role
+
+*************************
+
+ Create an Inventory File
+Create an inventory file named inventory.ini (or inventory.yml if you prefer YAML format) to define the hosts:
+
+[webservers]
+localhost ansible_connection=local
+
+************************
+Run the Playbook
+Run the playbook to apply the role:
+
+ansible-playbook -i inventory.ini site.yml
+***********************
