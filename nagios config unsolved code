@@ -1,0 +1,29 @@
+---
+- name: Configure Nagios Server to Monitor Client
+  hosts: nagios_server
+  become: yes
+  tasks:
+    - name: Add Nagios client to Nagios configuration
+      lineinfile:
+        path: /usr/local/nagios/etc/objects/localhost.cfg
+        line: |
+          define host {
+              use                     generic-host
+              host_name               ip-172-31-82-130
+              alias                   why - me
+              address                 54.174.90.189
+              check_command           check-host-alive
+              max_check_attempts      5
+              check_interval          5
+              retry_interval          1
+              notification_interval   60
+              notification_period     24x7
+              contact_groups          admins
+          }
+        create: yes
+        validate: 'nagios -v %s'
+
+    - name: Restart Nagios
+      service:
+        name: nagios
+        state: restarted
